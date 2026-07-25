@@ -6,6 +6,39 @@ This tool is built for **system administrators, penetration testers, researchers
 
 ---
 
+## 🏗️ Architecture
+
+`Dashboard.py` is the menu-driven entry point. It subclasses `Wifi_Manager`
+(from `Wifi_NetworkManager.py`), the library that implements every network
+operation. The `Logger` and `ReportRiser` modules support the whole toolkit —
+logging actions and exporting reports respectively.
+
+```mermaid
+flowchart TD
+    User(["User (terminal)"]) --> Dashboard["Dashboard.py<br/>menu-driven interface"]
+    Dashboard --> WM["Wifi_Manager<br/>(Wifi_NetworkManager.py)"]
+
+    WM --> IF["Interface & IP<br/>management"]
+    WM --> WIFI["Wi-Fi scan / connect<br/>/ AP mode"]
+    WM --> DHCP["DHCP<br/>renew / release"]
+    WM --> FW["Firewall<br/>(iptables)"]
+    WM --> ARP["ARP spoof<br/>detection"]
+    WM --> SSH["SSH checks<br/>& LAN scan"]
+    WM --> SPOOF["MAC / IP<br/>spoofing"]
+
+    WM -.-> Logger["Logger<br/>(Logs)"]
+    WM -.-> Report["ReportRiser<br/>(Report_Generator)"]
+    Dashboard -.-> Logger
+```
+
+<!--
+Screenshot slot — drop a dashboard screenshot into docs/screenshots/ and
+uncomment the line below (rename to match your file):
+![Dashboard screenshot](docs/screenshots/dashboard.png)
+-->
+
+---
+
 ## ✨ Features
 
 ### 🔹 Core Network Management
