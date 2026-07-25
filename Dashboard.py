@@ -7,8 +7,7 @@ from Wifi_NetworkManager import Wifi_Manager
 
 
 
-network_logo = """
-\033[92m
+network_logo = "\n\033[92m\n" + r"""
 
 
  /$$   /$$             /$$                                       /$$      
@@ -35,8 +34,7 @@ network_logo = """
                                             \______/                      
                                             
                                         
-\u001b[0m   
-"""
+""" + "\u001b[0m   \n"
 
 
 

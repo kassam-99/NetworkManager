@@ -1,0 +1,8 @@
+# Third-party dependencies for the NetworkManager toolkit.
+# Install with:  pip install -r requirements.txt
+netifaces
+paramiko
+psutil
+speedtest-cli
+scapy
+reportlab

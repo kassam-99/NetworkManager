@@ -1022,6 +1022,9 @@ dhcp-range=192.168.100.2,192.168.100.100,12h
             import speedtest  # lazy import so install step can run first
             st = speedtest.Speedtest()
             self.Logger_Functions.print_and_log("[+] Running speed test...")
+            # Selecting the best server is required before download/upload,
+            # otherwise st.results.ping is unset and the run fails.
+            st.get_best_server()
             download = st.download() / 1_000_000
             upload = st.upload() / 1_000_000
             ping = st.results.ping
@@ -1089,6 +1092,7 @@ dhcp-range=192.168.100.2,192.168.100.100,12h
                 ipv6_info = addresses.get(netifaces.AF_INET6, [])
                 ipv6_address = None
                 ipv6_prefix_len = None
+                prefix_len = None  # guard: referenced later even when no IPv6 block runs
                 is_ipv6_private = False
                 for addr in ipv6_info:
                     ip6 = addr.get('addr', '')
@@ -1443,8 +1447,10 @@ dhcp-range=192.168.100.2,192.168.100.100,12h
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(timeout)
-            result = sock.connect_ex((ip, port))
-            sock.close()
+            try:
+                result = sock.connect_ex((ip, port))
+            finally:
+                sock.close()
             if result == 0:
                 self.Logger_Functions.print_and_log(f"[\u001b[34m+\u001b[0m] SSH service detected on {ip}:{port}")
                 return True

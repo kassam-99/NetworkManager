@@ -1,0 +1,33 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Logs and generated reports
+*.log
+logs/
+report_generator.log
+Report*.csv
+Report*.txt
+Report*.json
+Report*.xml
+Report*.html
+Report*.md
+Report*.pdf
+
+# Saved runtime state (may contain Wi-Fi credentials)
+Saved_WiFi_Profiles.json
+
+# OS cruft
+.DS_Store
+Thumbs.db

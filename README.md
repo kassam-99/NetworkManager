@@ -83,13 +83,14 @@ This tool is built for **system administrators, penetration testers, researchers
 * `netifaces`
 * `paramiko`
 * `psutil`
-* `speedtest-cli`
+* `speedtest-cli` (imported as `speedtest`)
 * `scapy`
+* `reportlab` (used by `ReportRiser` for PDF export)
 
-### ✅ Local Modules
+### ✅ Local Modules (included in this repo)
 
-* `Logger` → Provides `Logs` class for printing and logging
-* `ReportRiser` → Provides `Report_Generator` class for generating reports
+* `Logger.py` → Provides the `Logs` class for printing and logging
+* `ReportRiser.py` → Provides the `Report_Generator` class for generating reports
 
 ---
 
@@ -98,8 +99,8 @@ This tool is built for **system administrators, penetration testers, researchers
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/yourusername/Wifi_NetworkManager.git
-   cd Wifi_NetworkManager
+   git clone https://github.com/kassam-99/NetworkManager.git
+   cd NetworkManager
    ```
 
 2. **Install dependencies**:
@@ -111,7 +112,7 @@ This tool is built for **system administrators, penetration testers, researchers
    Or manually:
 
    ```bash
-   pip install netifaces paramiko psutil speedtest-cli scapy
+   pip install netifaces paramiko psutil speedtest-cli scapy reportlab
    ```
 
 3. **Ensure required tools are installed** (Linux):
@@ -124,11 +125,18 @@ This tool is built for **system administrators, penetration testers, researchers
 
 ## 🚀 Usage
 
-### Run as a script
+### Run the interactive dashboard
+
+The entry point is `Dashboard.py`, which launches the menu-driven interface.
+Most features require root privileges (raw sockets, `iptables`, interface
+changes), so run it with `sudo`:
 
 ```bash
-sudo python3 Wifi_NetworkManager.py
+sudo python3 Dashboard.py
 ```
+
+`Wifi_NetworkManager.py` is the library module (the `Wifi_Manager` class) and is
+not meant to be run directly.
 
 ### Example inside Python
 
@@ -185,7 +193,12 @@ manager.SaveData(manager.NetworkData, report_types=["csv", "json"])
 * Many functions require **root privileges** (`sudo`).
 * Be cautious with spoofing, firewall manipulation, and AP mode in **production environments**.
 * ARP spoof detection is passive, but enabling AP mode or spoofing MAC/IP may disrupt active connections.
-* This tool is intended for **educational, security research, and administrative use only**.
+* The LAN/SSH scanning features (`scan_lan_for_ssh`, `basic_ssh_port_check`, `ssh_login_test`) should only be used on networks and hosts **you own or are explicitly authorized to test**. Unauthorized scanning or login attempts may be illegal in your jurisdiction.
+* This tool is intended for **educational, security research, and administrative use only**. You are responsible for complying with all applicable laws and policies.
+
+> **Note:** Saved Wi-Fi profiles are written to `Saved_WiFi_Profiles.json` in
+> plaintext. This file is git-ignored — do not commit it, as it may contain
+> Wi-Fi credentials.
 
 
 ---
