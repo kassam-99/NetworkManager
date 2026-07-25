@@ -1,6 +1,11 @@
 # Third-party dependencies for the NetworkManager toolkit.
 # Install with:  pip install -r requirements.txt
-netifaces
+#
+# netifaces (0.11.x) has no prebuilt wheels for CPython 3.12+ and its C
+# extension frequently fails to build. netifaces2 is a maintained drop-in that
+# ships 3.12 wheels and is imported the same way (`import netifaces`).
+netifaces; python_version < "3.12"
+netifaces2; python_version >= "3.12"
 paramiko
 psutil
 speedtest-cli

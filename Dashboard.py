@@ -156,7 +156,8 @@ class WifiFunctionsMenu(Wifi_Manager):
                 "view_arp_table": "Displays the current ARP table entries.",
                 "flush_arp_cache": "Clears the ARP cache to remove outdated or suspicious entries.",
                 "log_arp_spoofing": "Monitors and logs potential ARP spoofing by detecting MAC/IP conflicts.",
-                "compare_arp_tables": "Periodically compares ARP table snapshots to detect changes."
+                "compare_arp_tables": "Periodically compares ARP table snapshots to detect changes.",
+                "monitor_config_changes": "Starts a background watcher that auto-updates Main_Config when the network configuration changes (requires Auto Rotation enabled)."
             },
             "Network Security": {
                 "basic_ssh_port_check": "Checks if an SSH service is running on a specified IP and port.",
@@ -347,7 +348,7 @@ class WifiFunctionsMenu(Wifi_Manager):
             sub_option = int(sub_option)
             if 1 <= sub_option <= len(submenu):
                 sub_key = list(submenu.keys())[sub_option - 1]
-                func_name = sub_key.strip("\u001b[32m").strip("\u001b[0m")  # Remove ANSI color codes
+                func_name = sub_key  # Submenu keys are already clean method names
                 self.Logger_Functions.print_and_log(f"\n[\u001b[32m*\u001b[0m] Function: \033[36m{sub_key}\u001b[0m")
                 self.Logger_Functions.print_and_log(f"[\u001b[36m-\u001b[0m] Description: {submenu[sub_key]}")
                 

@@ -13,6 +13,37 @@ import threading
 import time
 
 # Third-party imports
+#
+# These libraries may be missing on a fresh environment. Importing them at the
+# module top level would raise ImportError before the auto-install path in
+# __main__ (Dashboard.run_check) could ever run, since Dashboard imports this
+# module first. Bootstrap the dependencies here, before the hard imports, so the
+# advertised "auto-install missing dependencies" feature actually works.
+def _bootstrap_dependencies():
+    """Install any missing third-party dependencies before they are imported."""
+    # netifaces has no 3.12+ wheels; use the netifaces2 drop-in there.
+    netifaces_pip = "netifaces2" if sys.version_info >= (3, 12) else "netifaces"
+    packages = {
+        "netifaces": netifaces_pip,
+        "paramiko": "paramiko",
+        "psutil": "psutil",
+        "speedtest": "speedtest-cli",  # pip package name differs from module name
+        "scapy": "scapy",
+    }
+    for module_name, pip_name in packages.items():
+        try:
+            importlib.import_module(module_name)
+        except ImportError:
+            try:
+                subprocess.check_call(
+                    [sys.executable, "-m", "pip", "install", pip_name]
+                )
+            except Exception as exc:  # pragma: no cover - best-effort bootstrap
+                print(f"[!] Failed to auto-install '{pip_name}': {exc}")
+
+
+_bootstrap_dependencies()
+
 import netifaces
 import paramiko
 import psutil
@@ -122,6 +153,10 @@ class Wifi_Manager:
 
         self.Saved_WiFi_Profiles = {}
         self.disconnect_monitor_thread = None
+
+        # Populated later by GetNetworkData(); initialized here so features like
+        # scan_lan_for_ssh() can safely reference it before GetNetworkData runs.
+        self.NetworkIP_CiderIPv4 = None
         
 
         # Standard libraries (already included in Python)
@@ -133,7 +168,8 @@ class Wifi_Manager:
 
         # Third-party libraries that may need installation
         self.third_party_libs = {
-            "netifaces": "netifaces",
+            # netifaces has no 3.12+ wheels; use the netifaces2 drop-in there.
+            "netifaces": "netifaces2" if sys.version_info >= (3, 12) else "netifaces",
             "paramiko": "paramiko",
             "psutil": "psutil",
             "speedtest": "speedtest-cli",  # pip package name is different
